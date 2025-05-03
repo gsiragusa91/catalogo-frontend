@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Catálogo de Productos</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      margin: 2rem;
+    }
+    input {
+      padding: 0.5rem;
+      margin-right: 1rem;
+    }
+    .product {
+      border: 1px solid #ccc;
+      padding: 1rem;
+      margin-bottom: 1rem;
+      border-radius: 8px;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Catálogo de Productos</h1>
+
+  <div>
+    <input type="text" id="searchInput" placeholder="Buscar producto...">
+    <button onclick="buscar()">Buscar</button>
+    <button onclick="cargarProductos()">Ver todos</button>
+  </div>
+
+  <div id="productList"></div>
+
+  <script>
+    const API_URL = "https://catalogo-api-5jrm.onrender.com";
+
+    // Llama a la API y obtiene todos los productos
+    async function cargarProductos() {
+      const res = await fetch(`${API_URL}/products`);
+      const data = await res.json();
+      renderizar(data);
+    }
+
+    // Llama a la API con búsqueda parcial
+    async function buscar() {
+      const query = document.getElementById("searchInput").value.trim();
+      if (!query) return cargarProductos();
+      const res = await fetch(`${API_URL}/products/search?name=${query}`);
+      const data = await res.json();
+      renderizar(data);
+    }
+
+    // Renderiza la lista de productos en pantalla
+    function renderizar(productos) {
+      const lista = document.getElementById("productList");
+      lista.innerHTML = "";
+
+      if (!productos.length) {
+        lista.innerHTML = "<p>No se encontraron productos.</p>";
+        return;
+      }
+
+      productos.forEach(p => {
+        const div = document.createElement("div");
+        div.className = "product";
+        div.innerHTML = `
+          <h3>${p.title}</h3>
+          <p><strong>Categoría:</strong> ${p.category}</p>
+          <p><strong>Precio:</strong> $${p.price}</p>
+          <p><strong>Stock:</strong> ${p.stock}</p>
+          <p>${p.description}</p>
+          <img src="${p.image_url}" width="150">
+        `;
+        lista.appendChild(div);
+      });
+    }
+
+    // Al iniciar, carga todos los productos
+    window.onload = cargarProductos;
+  </script>
+
+</body>
+</html>
