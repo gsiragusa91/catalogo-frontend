@@ -1,0 +1,16 @@
+body {
+  font-family: sans-serif;
+  margin: 2rem;
+}
+
+input {
+  padding: 0.5rem;
+  margin-right: 1rem;
+}
+
+.product {
+  border: 1px solid #ccc;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  border-radius: 8px;
+}
